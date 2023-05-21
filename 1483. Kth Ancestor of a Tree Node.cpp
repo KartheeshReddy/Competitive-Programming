@@ -175,5 +175,31 @@ public:
 };
 
 
+// approach 3 - Time Limit Exceeded
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+
+class TreeAncestor {
+public:
+    vector<int> parent;
+    TreeAncestor(int n, vector<int>& parent) {
+        this->parent=parent;
+    }
+    
+    int getKthAncestor(int node, int k) {
+        while(k-- and node!=-1)
+            node=parent[node];
+        
+        return node;
+    }
+};
+
+
+
+
 
 
