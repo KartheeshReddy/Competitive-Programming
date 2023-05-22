@@ -118,3 +118,129 @@ public:
     }
 };
 
+
+
+// approach 2
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+
+class Solution {
+public:
+    int rows,cols,res;
+    bool isValidPos(int i,int j)
+    {
+        if(i<0 or j<0 or i>=rows or j>=cols)
+            return false;
+        return true;
+    }
+
+    // make the island as visited and enqueue all (i,j) of this island
+    void visitIsland(vector<vector<int>> &grid,int i,int j,vector<vector<bool>> &visited,queue<pair<int,int>> &queue)
+    {
+        if(isValidPos(i-1,j) and !visited[i-1][j] and grid[i-1][j]==1)
+        {
+            visited[i-1][j]=true;
+            queue.push(make_pair(i-1,j));
+            visitIsland(grid,i-1,j,visited,queue);
+        }
+        if(isValidPos(i+1,j) and !visited[i+1][j] and grid[i+1][j]==1)
+        {
+            visited[i+1][j]=true;
+            queue.push(make_pair(i+1,j));
+            visitIsland(grid,i+1,j,visited,queue);
+        }
+        if(isValidPos(i,j-1) and !visited[i][j-1] and grid[i][j-1]==1)
+        {
+            visited[i][j-1]=true;
+            queue.push(make_pair(i,j-1));
+            visitIsland(grid,i,j-1,visited,queue);
+        }
+        if(isValidPos(i,j+1) and !visited[i][j+1] and grid[i][j+1]==1)
+        {
+            visited[i][j+1]=true;
+            queue.push(make_pair(i,j+1));
+            visitIsland(grid,i,j+1,visited,queue);
+        }
+    }
+    
+    // traverse the grid breadth-wise until you find another 1 that isn't visited(this is the other island)
+    int bfs(vector<vector<int>> &grid,queue<pair<int,int>> &queue,vector<vector<bool>> &visited)
+    {
+        int step=0;
+        while(!queue.empty())
+        {
+            int m=queue.size();
+
+            while(m--)
+            {
+                int i=queue.front().first;
+                int j=queue.front().second;
+                queue.pop();
+
+                if(isValidPos(i-1,j) and !visited[i-1][j])
+                {
+                    if(grid[i-1][j]==1)
+                        return step;
+                    visited[i-1][j]=true;
+                    queue.push(make_pair(i-1,j));
+                }
+                if(isValidPos(i+1,j) and !visited[i+1][j])
+                {
+                    if(grid[i+1][j]==1)
+                        return step;
+                    visited[i+1][j]=true;
+                    queue.push(make_pair(i+1,j));
+                }
+                if(isValidPos(i,j-1) and !visited[i][j-1])
+                {
+                    if(grid[i][j-1]==1)
+                        return step;
+                    visited[i][j-1]=true;
+                    queue.push(make_pair(i,j-1));
+                }
+                if(isValidPos(i,j+1) and !visited[i][j+1])
+                {
+                    if(grid[i][j+1]==1)
+                        return step;
+                    visited[i][j+1]=true;
+                    queue.push(make_pair(i,j+1));
+                }
+            }
+            step++;
+        }
+        return -1;
+    }
+    
+    int shortestBridge(vector<vector<int>>& grid) {
+        rows=grid.size(),cols=grid[0].size();
+
+        queue<pair<int,int>> queue;
+
+        vector<vector<bool>> visited(rows,vector<bool>(cols,false));
+        
+        bool flag=true;
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<cols;j++)
+            {
+                // make sure exactly single 1 is processed(this island processing is taken care by dfs)
+                if(grid[i][j]==1 and flag)
+                {
+                    visited[i][j]=true;
+                    queue.push(make_pair(i,j));
+                    visitIsland(grid,i,j,visited,queue);
+                    flag=false;
+                }
+            }
+            if(flag==false) break;
+        }
+       
+        return bfs(grid,queue,visited);        
+    }
+};
+
+
