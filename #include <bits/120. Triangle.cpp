@@ -41,4 +41,38 @@ public:
 };
 
 
-// approach 2
+// approach 2 (with o(n) space)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int rows=triangle.size();
+
+        vector<int> v(rows,INT_MAX);
+
+        v[0]=triangle[0][0];
+
+        // cout<<v[0]<<endl;
+        for(int i=1;i<rows;i++)
+        {
+            for(int j=i;j>=0;j--)
+            {
+                if(j==0)
+                    v[j]+=triangle[i][j];
+                else
+                    v[j]=triangle[i][j]+min(v[j-1],v[j]);
+            }
+            // for(auto x:v)
+            //     cout<<x<<" ";
+            // cout<<endl;
+        }
+        return *min_element(v.begin(),v.end());
+    }
+};
