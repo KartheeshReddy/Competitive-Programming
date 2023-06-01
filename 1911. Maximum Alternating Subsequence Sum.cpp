@@ -72,8 +72,10 @@ using namespace std;
 struct dpStruct
 {
     // considering the number as odd-indexed hence subtracted
+    // indicates the maximum summation that is formed with it as the last element and having odd index
     long long NSummation;
     // considering the number as even-indexed hence added
+    // indicates the maximum summation that is formed with it as the last element and having even index
     long long PSummation;
 };
 
@@ -84,7 +86,7 @@ public:
         long long res=nums[0];
 
         dpStruct dp[n];
-        
+
         dp[0].PSummation=nums[0];
 
         // indicated as -1 because it to be included as negative there must be a positive ahead of it 
@@ -99,6 +101,8 @@ public:
 
             for(int j=0;j<i;j++)
             {
+                // for ith index in a subsequence you can take jth index PSummation and subtract it from nums[i] because ith index is treated as odd index
+                // similarly vice-versa for the other case 
                 if(dp[j].PSummation-nums[i]>dp[i].NSummation)
                     dp[i].NSummation=dp[j].PSummation-nums[i];
 
@@ -113,3 +117,41 @@ public:
     }
 };
 
+
+// approach 4 - dp O(N)
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+struct dpStruct
+{
+    // considering the number as odd-indexed hence subtracted
+    long long NSummation;
+    // considering the number as even-indexed hence added
+    long long PSummation;
+};
+
+class Solution {
+public:
+    long long maxAlternatingSum(vector<int>& nums) {
+        int n=nums.size();
+
+        dpStruct dp[n];
+
+        dp[0].PSummation=nums[0];
+        dp[0].NSummation=-1;
+
+        for(int i=1;i<n;i++)
+        {
+            dp[i].PSummation=nums[i];
+
+            dp[i].NSummation=-1;
+
+            dp[i].PSummation=max((long long)nums[i],max(dp[i-1].NSummation!=-1?dp[i-1].NSummation+nums[i]:INT_MIN,dp[i-1].PSummation));
+            dp[i].NSummation=max((long long)-1,max(dp[i-1].PSummation-nums[i],dp[i-1].NSummation));
+        }
+
+        return max(dp[n-1].PSummation,dp[n-1].NSummation);
+    }
+};
