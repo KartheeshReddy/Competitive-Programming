@@ -1,3 +1,5 @@
+// as the number of bits can be 32 bits in any number at max..the solution has constant time and space complexity
+
 #include <bits/stdc++.h>
 using namespace std;
 
