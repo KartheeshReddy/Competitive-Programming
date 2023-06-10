@@ -32,3 +32,39 @@ public:
         return -1;
     }
 };
+
+
+// approach 2 -- An optimization to the above -- O(log(maxSum))
+
+
+class Solution {
+public:
+    int maxValue(int n, int index, int maxSum) {
+        int low=1,high=maxSum;
+        while(low<=high)
+        {
+            int k=low+(high-low)/2;
+            int nToLeft=index;
+            long long minSumToLeft;
+            if(nToLeft>=k-1)
+                minSumToLeft=(long long)(k-1)*((k-1)+1)/2+(nToLeft-(k-1));
+            else
+                minSumToLeft=((long long)(k-1)*((k-1)+1)/2)-((long long)((k-1)-nToLeft)*(((k-1)-nToLeft)+1)/2);
+
+            int nToRight=n-index-1;
+            long long minSumToRight;
+            if(nToRight>=k-1)
+                minSumToRight=(long long)(k-1)*((k-1)+1)/2+(nToRight-(k-1));
+            else
+                minSumToRight=((long long)(k-1)*((k-1)+1)/2)-((long long)((k-1)-nToRight)*(((k-1)-nToRight)+1)/2);
+
+            // cout<<k<<" : "<<minSumToLeft+k+minSumToRight<<endl;
+            if((long long)minSumToLeft+k+minSumToRight<=maxSum)
+                low=k+1;
+            else
+                high=k-1;
+        }
+        return low-1;
+    }
+};
+
