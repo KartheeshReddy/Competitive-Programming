@@ -101,3 +101,57 @@ public:
 };
 
 
+// approach 3
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+
+class SnapshotArray {
+public:
+    vector<vector<pair<int,int>>> arr;
+    int currSnapId;
+    SnapshotArray(int length) {
+        arr=vector<vector<pair<int,int>>>(length);
+        currSnapId=0;
+    }
+    
+    void set(int index, int val) {
+        if(arr[index].empty() or arr[index].back().first!=currSnapId)
+            arr[index].push_back(make_pair(currSnapId,val));
+        
+        arr[index].back().second=val;
+    }
+    
+    int snap() {
+        return currSnapId++;;
+    }
+    // if there is no snapId for this index then return the value of the prev snapId found for that index
+    int get(int index, int snap_id) {
+        int low=0,high=arr[index].size()-1;
+        int res=-1;
+
+        while(low<=high)
+        {
+            int mid=low+(high-low)/2;
+            if(arr[index][mid].first>snap_id)
+                high=mid-1;
+            else if(arr[index][mid].first<=snap_id)
+            {
+                res=arr[index][mid].second;
+                low=mid+1;
+            }
+        }
+        return res!=-1?res:0;
+    }
+};
+
+/**
+ * Your SnapshotArray object will be instantiated and called as such:
+ * SnapshotArray* obj = new SnapshotArray(length);
+ * obj->set(index,val);
+ * int param_2 = obj->snap();
+ * int param_3 = obj->get(index,snap_id);
+ */
