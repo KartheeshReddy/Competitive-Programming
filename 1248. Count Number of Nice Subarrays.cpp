@@ -80,3 +80,45 @@ public:
 // [o1,e2,o2,e3]
 // [o1,e2,o2,e3,e4]
 // it depends on the number of even nos on either side of it
+
+
+
+
+
+// the method of deque goes like:
+// [e1,e2,o1,e3,o2,e4,e5] k=2
+
+// at o2 deque size will be k+1
+// for o2 -> 2-(-1)=3 [e1,e2,o1,e3,o2],[e2,o1,e3,o2],[o1,e3,o2] 
+// for e4 -> 2-(-1)=3 [e1,e2,o1,e3,o2,e4],[e2,o1,e3,o2,e4],[o1,e3,o2,e4]
+// for e5 -> 2-(-1)=3 [e1,e2,o1,e3,o2,e4,e5],[e2,o1,e3,o2,e4,e5],[o1,e3,o2,e4,e5]
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int n=nums.size(),res=0;
+
+        deque<int> deque;
+        deque.push_back(-1);
+
+        for(int i=0;i<n;i++)
+        {
+            if(nums[i]%2!=0)
+                deque.push_back(i);
+
+            if(deque.size()>k+1)
+                deque.pop_front();
+
+            if(deque.size()==k+1)
+                res+=deque[1]-deque[0];
+        }
+        
+        return res;
+    }
+};
+
